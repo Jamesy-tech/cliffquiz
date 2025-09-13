@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How well do you know Cliff aka Dad aka Grandad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish&display=swap" rel="stylesheet">
+<style>
+  body { font-family:'Mulish'; margin:0 auto; padding:20px; max-width:1000px; background:#eaf0fb; }
+  #question{font-size:3rem;margin-bottom:20px;}
+  #answerInput{width:100%;padding:12px;font-size:1.2rem;margin-bottom:10px;border-radius:8px;border:none;outline:none;}
+  #submitBtn{padding:8px 35px;font-size:1rem;margin-top:12px;background:#005cb2;border:none;border-radius:10px;color:white;cursor:pointer;}
+  #submitBtn:hover{filter:brightness(110%);}
+  #options label{display:block;margin-bottom:5px;font-size:22px;background:white;padding:5px 7px;border-radius:5px;cursor:pointer;}
+  table{width:100%;border-collapse:collapse;margin-top:20px;}
+  th,td{border:1px solid #ddd;padding:8px;text-align:left;}
+  .correct{background:#c8e6c9;}
+  .wrong{background:#ffcdd2;}
+  .blank{background:white;}
+  .exit-quiz{display:block;margin-top:15px;padding:9px;width:100px;background:#005cb2;color:white;border-radius:12px;border:none;cursor:pointer;}
+  .exit-quiz:hover{filter:brightness(110%);}
+</style>
+</head>
+<body>
+<h1>How well do you know Cliff aka Dad aka Grandad</h1>
+<div id="quizContainer"></div>
+<script>
+  const quiz=[{"q":"1. What is his second favourite colour?","a":"B. Cerise","type":"choice","opts":["A. Magenta","B. Cerise","C. Crimson"]},{"q":"2. Who is his second favourite band?","a":"B. Dandy Warhols","type":"choice","opts":["A. Pink Floyd","B. Dandy Warhols","C. Unkle"]},{"q":"3. What was his favourite subject at secondary school?","a":"B. Geography","type":"choice","opts":["A. History","B. Geography","C. English"]},{"q":"4. Who is his favourite female singer?","a":"A. Lana Del Rey","type":"choice","opts":["A. Lana Del Rey","B. Debbie Harry","C. Tinita Tikaram"]},{"q":"5. What is his favourite takeaway?","a":"A. Fish and Chips","type":"choice","opts":["A. Fish and Chips","B. KFC","C. Thai"]},{"q":"6. How many cities has he lived in (min 2 months)?","a":"B. 7","type":"choice","opts":["A. 5","B. 7","C. 9"]},{"q":"7. How many full time jobs has he had since leaving school?","a":"C. 4","type":"choice","opts":["A. 2","B. 3","C. 4"]},{"q":"8. What is his favourite spice/sauce?","a":"B. Kimchee","type":"choice","opts":["A. Mint","B. Kimchee","C. Garlic"]},{"q":"9. How many months old is he?","a":"A. 912","type":"choice","opts":["A. 912","B. 921","C. 930"]},{"q":"10. How many nights has he spent in hospital from 7 days old?","a":"A. 0","type":"choice","opts":["A. 0","B. 7","C. 17"]},{"q":"11. Who is NZ sportsperson he most admires?","a":"A. Lydia Ko","type":"choice","opts":["A. Lydia Ko","B. Chris Wood","C. Richard Hadlee"]},{"q":"12. What is his favourite vegetable?","a":"C. Potato","type":"choice","opts":["A. Pea","B. Parsnip","C. Potato"]},{"q":"13. What is his favourite flower?","a":"B. Dahlia","type":"choice","opts":["A. Daffodil","B. Dahlia","C. Dandelion"]},{"q":"14. What is his favourite sweet?","a":"A. Trifle","type":"choice","opts":["A. Trifle","B. Cheesecake","C. Custard Slice"]},{"q":"15. Where was his mother born?","a":"C. Scotland","type":"choice","opts":["A. England","B. Ireland","C. Scotland"]},{"q":"16. Where did he first meet Bev?","a":"C. Christchurch","type":"choice","opts":["A. Timaru","B. Dunedin","C. Christchurch"]},{"q":"17. Which province has he not played cricket for?","a":"A. Canterbury","type":"choice","opts":["A. Canterbury","B. Otago","C. Wanganui"]},{"q":"18. Which of these places has he not been to?","a":"A. Bali","type":"choice","opts":["A. Bali","B. Kuala Lumpur","C. Malacca"]},{"q":"19. Which of these jobs has he not worked as?","a":"C. Shop Assistant","type":"choice","opts":["A. Postman","B. Telegram Delivery","C. Shop Assistant"]},{"q":"20. Which of these sports has he not played?","a":"B. Hockey","type":"choice","opts":["A. Softball","B. Hockey","C. Squash"]}];
+  let current=0,answers=[];
+  const container=document.getElementById('quizContainer');
+
+  function showQuestion(){
+    if(current>=quiz.length){ return showResults(); }
+    const q=quiz[current];
+    const type=q.type||'input';
+    let html='<div id="question">'+q.q+'</div>';
+    if(type==='choice'){
+      html+='<div id="options">';
+      (q.opts||[]).forEach(opt=>{html+='<label><input type="radio" name="opt" value="'+opt+'"> '+opt+'</label>';});
+      html+='</div>';
+    }else{
+      html+='<input id="answerInput" autocomplete="off">';
+    }
+    html+='<button id="submitBtn">Next</button>';
+    container.innerHTML=html;
+
+    const submit=()=>{
+      let val='';
+      if(type==='choice'){
+        const r=document.querySelector('input[name="opt"]:checked');
+        val=r?r.value:'';
+      }else{
+        val=document.getElementById('answerInput').value.trim();
+      }
+      answers.push(val);
+      current++;
+      showQuestion();
+    };
+
+    document.getElementById('submitBtn').onclick=submit;
+    if(type==='input'){
+      const inp=document.getElementById('answerInput');
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter') submit();});
+      inp.focus();
+    }
+  }
+
+  function showResults(){
+    let html='<h2>Review</h2><table><tr><th>#</th><th>Your Answer</th><th>Correct Answer</th></tr>';
+    quiz.forEach((q,i)=>{
+      const user=answers[i]||'';
+      const correct=q.a;
+      const cls='blank'+(user?(user.toLowerCase()===correct.toLowerCase()?' correct':' wrong'):'');
+      html+='<tr class="'+cls+'"><td>'+(i+1)+'. '+q.q+'</td><td>'+user+'</td><td>'+correct+'</td></tr>';
+    });
+    html+='</table><button class="exit-quiz" onclick="window.close()">Exit</button>';
+    container.innerHTML=html;
+  }
+
+  showQuestion();
+</script>
+</body>
+</html>
