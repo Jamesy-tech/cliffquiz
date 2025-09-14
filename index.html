@@ -66,17 +66,25 @@
     }
   }
 
-  function showResults(){
-    let html='<h2>Review</h2><table><tr><th>#</th><th>Your Answer</th><th>Correct Answer</th></tr>';
-    quiz.forEach((q,i)=>{
-      const user=answers[i]||'';
-      const correct=q.a;
-      const cls='blank'+(user?(user.toLowerCase()===correct.toLowerCase()?' correct':' wrong'):'');
-      html+='<tr class="'+cls+'"><td>'+(i+1)+'. '+q.q+'</td><td>'+user+'</td><td>'+correct+'</td></tr>';
-    });
-    html+='</table><button class="exit-quiz" onclick="window.close()">Exit</button>';
-    container.innerHTML=html;
-  }
+function showResults(){
+  let html='<h2>Review</h2><table><tr><th>#</th><th>Your Answer</th><th>Correct Answer</th></tr>';
+  quiz.forEach((q,i)=>{
+    const user=answers[i]||'';
+    const correct=q.a;
+    let cls='';
+    if(!user){
+      cls='blank';
+    }else if(user.toLowerCase()===correct.toLowerCase()){
+      cls='correct';
+    }else{
+      cls='wrong';
+    }
+    html+='<tr class="'+cls+'"><td>'+(i+1)+'. '+q.q+'</td><td>'+user+'</td><td>'+correct+'</td></tr>';
+  });
+  html+='</table><button class="exit-quiz" onclick="window.close()">Exit</button>';
+  container.innerHTML=html;
+}
+
 
   showQuestion();
 </script>
